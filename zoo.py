@@ -13,136 +13,148 @@
 # Попробуйте добавить дополнительные функции в вашу программу, такие как сохранение информации о зоопарке в файл
 # и возможность её загрузки, чтобы у вашего зоопарка было "постоянное состояние" между запусками программы.
 
-import pickle
+import pickle           # Используем для сохранения объекта класса Zoo в файле
 
+# Базовый класс для животных
 class Animal():
     def __init__(self, name, sound, eat):
-        self.name = name
-        self.sound = sound
-        self.eat = eat
+        self.name = name                # Имя животного
+        self.sound = sound              # Издаваемые звуки
+        self.eat = eat                  # Потребляемая пища
 
-    def get_name(self):
+    def get_name(self):                 # Получаем имя животного
         return self.name
 
-    def func_sound(self):
+    def func_sound(self):               # Получаем звуки животного. Будет переопределена
         pass
 
-    def func_eat(self):
+    def func_eat(self):                 # Получаем потребляемую пищу животным. Будет переопределена
         pass
 
+# Дочерний класс Описывает птиц
 class Bird(Animal):
     def __init__(self, name, sound, eat):
-        super().__init__(name, sound, eat)
-        self.move = "Умеет летать"
+        super().__init__(name, sound, eat)      # Наследуем атрибуты базового класса
+        self.move = "Умеет летать"              # Добавляем атрибут "движение"
 
-    def func_sound(self):
+    def func_sound(self):                       # Переопределяем функцию звуков
         return self.sound
 
-    def func_eat(self):
+    def func_eat(self):                         # Переопределяем функцию потребляемой пищи
         return self.eat
 
+# Дочерний класс Описывает млекопитающих
 class Mammal(Animal):
     def __init__(self, name, sound, eat):
-        super().__init__(name, sound, eat)
-        self.move = "Умеет бегать"
+        super().__init__(name, sound, eat)      # Наследуем атрибуты базового класса
+        self.move = "Умеет бегать"              # Добавляем атрибут "движение"
 
-    def func_sound(self):
+    def func_sound(self):                       # Переопределяем функцию звуков
         return self.sound
 
-    def func_eat(self):
+    def func_eat(self):                         # Переопределяем функцию потребляемой пищи
         return self.eat
 
+# Дочерний класс Описывает птиц
 class Replite(Animal):
     def __init__(self, name, sound, eat):
-        super().__init__(name, sound, eat)
-        self.move = "Умеет ползать"
+        super().__init__(name, sound, eat)      # Наследуем атрибуты базового класса
+        self.move = "Умеет ползать"             # Добавляем атрибут "движение"
 
-    def func_sound(self):
+
+    def func_sound(self):                       # Переопределяем функцию звуков
         return self.sound
 
-    def func_eat(self):
+    def func_eat(self):                         # Переопределяем функцию потребляемой пищи
         return self.eat
 
-def animal_sound(animals):
+def animal_sound(animals):                      # Создаем функцию, которая принимает список животных и вызывает методы для каждого животного
     for animal in animals:
         print(f"{animal.get_name()} умеет {animal.func_sound()} и любит {animal.func_eat()}")
 
-animals = [Bird("Воробей", "чирикать", "семечки"), Mammal("Тигр", "рычать", "мясо"), Replite("Змея", "шипеть", "мышей")]
+animals = [Bird("Воробей", "чирикать", "семечки"), Mammal("Тигр", "рычать", "мясо"),
+           Replite("Змея", "шипеть", "мышей")]          # Создаем список животных разных классов
 
-animal_sound(animals)
+animal_sound(animals)                           # Вызываем функцию, демонстрирующую наследование и полиморфизм
 
+# Класс объединяющий работников и животных Для связи классов используем композицию
 class Zoo():
     def __init__(self):
-        self.animal_list = []
-        self.employee_list = []
+        self.animal_list = []                   # Пустой список животных. Применяется если файл с информацией пустой
+        self.employee_list = []                 # Пустой список работников. Применяется если файл с информацией пустой
 
-    def add_animal(self, id, name, sound, eat):
-        match id:
+    def add_animal(self, id, name, sound, eat): # Метод добавления животных в список
+        match id:                               # Определяем вид животного
             case "п":
-                animal = Bird(name, sound, eat)
+                animal = Bird(name, sound, eat)     # Птицы
             case "м":
-                animal = Mammal(name, sound, eat)
+                animal = Mammal(name, sound, eat)   # Млекопитающие
             case "р":
-                animal = Replite(name, sound, eat)
+                animal = Replite(name, sound, eat)  # Рептилии
             case _:
                 print("Неопознанный вид животного")
         self.animal_list.append(animal)
 
-    def print_animals(self):
+    def print_animals(self):                    # Метод вывода списка животных
         for animal in self.animal_list:
             print(f"{animal.get_name()} умеет {animal.func_sound()} и любит {animal.func_eat()}")
 
-    def add_employee(self, id, name, age):
-        match id:
+    def add_employee(self, id, name, age):      # Метод добавления работников в список
+        match id:                               # Определяем специализацию работника
             case "с":
-                employee = ZooKeeper(name, age)
+                employee = ZooKeeper(name, age)     # Смотритель
             case "в":
-                employee = Veterinarian(name, age)
+                employee = Veterinarian(name, age)  # Ветеринар
             case _:
                 print("Нет такой категории работников")
         self.employee_list.append(employee)
 
-    def print_employees(self):
+    def print_employees(self):                  # Метод вывода списка работников
         for employee in self.employee_list:
             print(f"{employee.name} {employee.age} лет. В его обязанности входит {employee.duty}")
 
+# Базовый класс для работников
 class Employee():
     def __init__(self, name, age):
-        self.name = name
-        self.age = age
+        self.name = name                        # Имя работника
+        self.age = age                          # Возраст работника
 
+# Дочерний класс Описывает смотрителей
 class ZooKeeper(Employee):
     def __init__(self, name, age):
-        super().__init__(name, age)
-        self.duty = "кормить животных"
+        super().__init__(name, age)             # Наследуем атрибуты базового класса
+        self.duty = "кормить животных"          # Добавляем атрибут "обязанности"
 
-    def feed_animal(self):
+    def feed_animal(self):                      # Специфический метод в классе ZooKeeper
         print("Кормит животных")
 
+# Дочерний класс Описывает ветеринаров
 class Veterinarian(Employee):
     def __init__(self, name, age):
-        super().__init__(name, age)
-        self.duty = "лечить животных"
+        super().__init__(name, age)             # Наследуем атрибуты базового класса
+        self.duty = "лечить животных"           # Добавляем атрибут "обязанности"
 
-    def heal_animal(self):
+    def heal_animal(self):                      # Специфический метод в классе Veterinarian
         print("Лечит животных")
 
 try:
-    with open("zoo_list.txt", "rb") as f:
+    with open("zoo_list.txt", "rb") as f:       # Считываем сохраненный в файле объект Zoo
         zoo = pickle.load(f)
-except EOFError:
+except EOFError:                                # Если файл пустой, создаем новый объект Zoo
     zoo = Zoo()
 
+# Добавляем новые объекты производных классов от Animal
 zoo.add_animal("п", "Петух", "кукарекать", "зерно")
 zoo.add_animal("м","Кот", "мяукать", "молоко")
 zoo.add_animal("р","Кобра", "шипеть", "лягушек")
 
-zoo.print_animals()
+zoo.print_animals()                             # Печатаем список животных
 
+# Добавляем новые объекты производных классов от Employee
 zoo.add_employee("в", "Иван", "35")
 zoo.add_employee("с", "Пётр", "45")
 
-zoo.print_employees()
+zoo.print_employees()                           # Печатаем список работников
 
-with open("zoo_list.txt", "wb") as f:
+with open("zoo_list.txt", "wb") as f:           # Записываем объект Zoo в файл
     pickle.dump(zoo, f)
